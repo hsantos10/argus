@@ -1,0 +1,20 @@
+# Python environment for the ARGUS backend and the snapshot/analysis runner.
+#   conda env create -f environment.yml && conda activate argus
+name: argus
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - matplotlib
+  - xarray
+  - netcdf4
+  - pip
+  - pip:
+      - OpenVisus
+      - openvisuspy
+      - fastapi
+      - uvicorn[standard]
+      # Optional: only the DMD/Tucker analysis queries (web/scripts/qr/dmd.py) need these.
+      - tensorly
+      - torch

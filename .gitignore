@@ -1,0 +1,15 @@
+# Data and generated outputs
+*.nc
+outputs/
+__pycache__/
+*.pyc
+
+# Node / Next.js
+node_modules/
+.next/
+package-lock.json
+
+# Local HTTPS certs for WebXR testing, env files
+web/certificates/
+*.pem
+.env*
