@@ -2,6 +2,10 @@
 
 **A live globe for petabyte-scale climate data, in the browser and in VR.**
 
+![ARGUS globes: ECCO ocean temperature, CMIP6 warming and GEOS winds](docs/img/hero.jpg)
+
+**IEEE SciVis Contest 2026 — Honorable Mention** (IEEE VIS 2026, Boston)
+
 ARGUS streams the IEEE SciVis Contest 2026 datasets — the ECCO LLC4320 ocean,
 the DYAMOND GEOS atmosphere and NEX-GDDP CMIP6 projections — straight from the
 National Science Data Fabric into an interactive 3-D globe. Nothing is
@@ -27,6 +31,30 @@ Demo video: <https://youtu.be/17ChssNaejo>
 
 Wind is drawn as particles advected along the GEOS u/v field on top of the
 ocean volume, at the same hour.
+
+## Gallery
+
+**24 variables from four archives, one renderer.** ECCO ocean, DYAMOND GEOS atmosphere
+and NEX-GDDP-CMIP6 projections.
+
+![24 climate variables rendered on the same globe](docs/img/variables.jpg)
+
+**Two futures.** January warming by 2100 in the far north, under SSP2-4.5 (left) and SSP5-8.5 (right).
+
+![CMIP6 SSP2-4.5 vs SSP5-8.5 warming](docs/img/futures.jpg)
+
+**Storms and coupled data.** GEOS near-surface wind crossing the Atlantic (left), and ocean
+temperature with wind particles from the same hour (right).
+
+![GEOS wind and coupled ocean + atmosphere](docs/img/atmosphere-ocean.jpg)
+
+**Layer by layer.** ECCO ocean temperature at 0.5 m, 302 m and 1,003 m depth.
+
+![ECCO ocean temperature at three depths](docs/img/ocean-layers.jpg)
+
+**In the headset.** The same page in WebXR: grab the globe, set the depth range by hand.
+
+![ARGUS in VR](docs/img/vr.jpg)
 
 ## Layout
 
