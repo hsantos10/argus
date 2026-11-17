@@ -4,6 +4,9 @@ FastAPI service that streams raw sub-volumes of the SciVis 2026 ECCO LLC4320
 dataset to the Three.js GPU globe. Wraps `openvisuspy` and the OSDF Pelican
 endpoints from <https://sciviscontest2026.github.io/examples/#access-llc4320>.
 
+The data hosts can be overridden with `ARGUS_ECCO_URL`, `ARGUS_DYAMOND_URL` and
+`ARGUS_CMIP6_URL`; see [Data endpoints](../README.md#data-endpoints).
+
 ---
 
 ## Prerequisites

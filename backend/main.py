@@ -15,6 +15,7 @@ from datetime import date, datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
+import os
 
 import numpy as np
 from fastapi import FastAPI, HTTPException, Query, Response
@@ -35,10 +36,26 @@ import OpenVisus as ov
 # (17280×12960 vs 8640×6480, verified), so the LLC4320 longitude-roll fraction
 # and latitude LUT both apply to it unchanged.
 
-_DYAMOND_LLC2160_BASE = (
-    "https://nsdf-climate3-origin.nationalresearchplatform.org:50098"
-    "/nasa/nsdf/climate3/dyamond/"
+# ─── Data endpoints ──────────────────────────────────────────────────────────
+#
+# The OpenVisus/NSDF hosts can move, so each one can be overridden with an
+# environment variable (see "Data endpoints" in the top-level README).
+#   ARGUS_ECCO_URL     prefix up to and including /nasa/nsdf (ECCO LLC4320)
+#   ARGUS_DYAMOND_URL  prefix up to and including /nasa/nsdf/climate3/dyamond
+#   ARGUS_CMIP6_URL    full NEX-GDDP-CMIP6 dataset URL
+
+def _env_url(name: str, default: str) -> str:
+    return (os.environ.get(name) or default).rstrip("/")
+
+
+ECCO_BASE = _env_url("ARGUS_ECCO_URL", "pelican://osg-htc.org/nasa/nsdf")
+DYAMOND_BASE = _env_url(
+    "ARGUS_DYAMOND_URL",
+    "https://nsdf-climate3-origin.nationalresearchplatform.org:50098/nasa/nsdf/climate3/dyamond",
 )
+CMIP6_URL = os.environ.get("ARGUS_CMIP6_URL") or "https://atlantis.sci.utah.edu/mod_visus?dataset=nex-gddp-cmip6"
+
+_DYAMOND_LLC2160_BASE = DYAMOND_BASE + "/"
 
 # At full LLC4320 res (W=17280) lon=−180° starts at x≈10464.
 LLC_LON_ROLL_FRAC = 10464 / 17280
@@ -50,19 +67,19 @@ DATASETS: dict[str, dict[str, Any]] = {
     # ── ECCO LLC4320 ocean ────────────────────────────────────────────────
     "theta": {
         "label": "Temperature (theta)",
-        "url": "pelican://osg-htc.org/nasa/nsdf/climate1/llc4320/idx/theta/theta_llc4320_x_y_depth.idx",
+        "url": f"{ECCO_BASE}/climate1/llc4320/idx/theta/theta_llc4320_x_y_depth.idx",
         "group": "ecco", "grid": "llc", "depth_levels": 90,
         "time_info": ECCO_TIME_INFO,
     },
     "salt": {
         "label": "Salinity (salt)",
-        "url": "pelican://osg-htc.org/nasa/nsdf/climate1/llc4320/idx/salt/salt_llc4320_x_y_depth.idx",
+        "url": f"{ECCO_BASE}/climate1/llc4320/idx/salt/salt_llc4320_x_y_depth.idx",
         "group": "ecco", "grid": "llc", "depth_levels": 90,
         "time_info": ECCO_TIME_INFO,
     },
     "w": {
         "label": "Vertical velocity (w)",
-        "url": "pelican://osg-htc.org/nasa/nsdf/climate2/llc4320/idx/w/w_llc4320_x_y_depth.idx",
+        "url": f"{ECCO_BASE}/climate2/llc4320/idx/w/w_llc4320_x_y_depth.idx",
         "group": "ecco", "grid": "llc", "depth_levels": 90,
         "time_info": ECCO_TIME_INFO,
     },
@@ -186,7 +203,7 @@ _db_lock = threading.Lock()
 
 # ─── CMIP6 dataset ────────────────────────────────────────────────────────────
 
-_CMIP6_URL = "https://atlantis.sci.utah.edu/mod_visus?dataset=nex-gddp-cmip6"
+_CMIP6_URL = CMIP6_URL
 
 _cmip6_db: Any = None
 _cmip6_db_error: str | None = None
@@ -214,8 +231,8 @@ def get_cmip6_db():
 # ─── DYAMOND GEOS atmosphere datasets ─────────────────────────────────────────
 
 _DYAMOND_GEOS_TMPL = (
-    "https://nsdf-climate3-origin.nationalresearchplatform.org:50098"
-    "/nasa/nsdf/climate3/dyamond/GEOS/GEOS_{VAR}/{var}_face_{face}_depth_52_time_0_10269.idx"
+    DYAMOND_BASE.replace("{", "{{").replace("}", "}}")
+    + "/GEOS/GEOS_{VAR}/{var}_face_{face}_depth_52_time_0_10269.idx"
 )
 
 _dyamond_atm_cache: dict[str, Any] = {}

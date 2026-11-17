@@ -54,23 +54,32 @@ def _load_dataset_with_timeout(url: str, timeout: float = 12.0):
 # 1. URL CONSTANTS
 # ─────────────────────────────────────────────────────────────────────────────
 
-_LLC4320_BASE = "https://nsdf-climate1-origin.nationalresearchplatform.org:50098/nasa/nsdf/climate1/llc4320/idx"
+# Each host can be overridden with an environment variable, since the
+# OpenVisus/NSDF endpoints can move (see "Data endpoints" in the README).
+#   ARGUS_ECCO_URL     prefix up to and including /nasa/nsdf
+#   ARGUS_DYAMOND_URL  prefix up to and including /nasa/nsdf/climate3/dyamond
+#   ARGUS_CMIP6_URL    full NEX-GDDP-CMIP6 dataset URL
+_ECCO_BASE = (os.environ.get("ARGUS_ECCO_URL")
+              or "https://nsdf-climate1-origin.nationalresearchplatform.org:50098/nasa/nsdf").rstrip("/")
+_DYAMOND_BASE = (os.environ.get("ARGUS_DYAMOND_URL")
+                 or "https://nsdf-climate3-origin.nationalresearchplatform.org:50098"
+                    "/nasa/nsdf/climate3/dyamond").rstrip("/")
+
+_LLC4320_BASE = f"{_ECCO_BASE}/climate1/llc4320/idx"
 LLC4320_URLS = {
     "theta": f"{_LLC4320_BASE}/theta/theta_llc4320_x_y_depth.idx",
     "salt":  f"{_LLC4320_BASE}/salt/salt_llc4320_x_y_depth.idx",
 }
 
-NEX_GDDP_URL = "https://atlantis.sci.utah.edu/mod_visus?dataset=nex-gddp-cmip6"
+NEX_GDDP_URL = (os.environ.get("ARGUS_CMIP6_URL")
+                or "https://atlantis.sci.utah.edu/mod_visus?dataset=nex-gddp-cmip6")
 
 _DYAMOND_GEOS_BASE = (
-    "https://nsdf-climate3-origin.nationalresearchplatform.org:50098"
-    "/nasa/nsdf/climate3/dyamond/GEOS/GEOS_{VAR}/{var}_face_{face}_depth_52_time_0_10269.idx"
+    _DYAMOND_BASE.replace("{", "{{").replace("}", "}}")
+    + "/GEOS/GEOS_{VAR}/{var}_face_{face}_depth_52_time_0_10269.idx"
 )
 
-_DYAMOND_LLC2160_BASE_URL = (
-    "https://nsdf-climate3-origin.nationalresearchplatform.org:50098"
-    "/nasa/nsdf/climate3/dyamond/"
-)
+_DYAMOND_LLC2160_BASE_URL = _DYAMOND_BASE + "/"
 
 # Per-variable paths from the contest reference notebook
 # (ieee_scivis_dyamond_ocean.ipynb)

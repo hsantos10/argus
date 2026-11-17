@@ -104,6 +104,40 @@ All data is streamed from the public contest endpoints; see the
 powered by [OpenVisus](https://github.com/sci-visus/OpenVisus) and the
 National Science Data Fabric.
 
+### Data endpoints
+
+The OpenVisus servers that host the data can move. If a dataset stops loading,
+point ARGUS at the new host with these environment variables. You don't need
+to change any code:
+
+| Variable | What it replaces | Default |
+|---|---|---|
+| `ARGUS_ECCO_URL` | ECCO LLC4320 ocean: prefix up to and including `/nasa/nsdf` | backend: `pelican://osg-htc.org/nasa/nsdf`<br>analysis runner: `https://nsdf-climate1-origin.nationalresearchplatform.org:50098/nasa/nsdf` |
+| `ARGUS_DYAMOND_URL` | DYAMOND LLC2160 ocean and GEOS atmosphere: prefix up to and including `/nasa/nsdf/climate3/dyamond` | `https://nsdf-climate3-origin.nationalresearchplatform.org:50098/nasa/nsdf/climate3/dyamond` |
+| `ARGUS_CMIP6_URL` | NEX-GDDP-CMIP6: the full dataset URL | `https://atlantis.sci.utah.edu/mod_visus?dataset=nex-gddp-cmip6` |
+
+Only the host part changes. ARGUS appends the same dataset paths as before
+(for example `climate1/llc4320/idx/theta/theta_llc4320_x_y_depth.idx`), so a
+replacement host must serve the same paths. ECCO `w` lives under `climate2/`,
+so `ARGUS_ECCO_URL` must cover both `climate1/` and `climate2/`. The Pelican
+federation default does.
+
+Set the variables in the shell that starts the backend and the web app. The
+`/api/query` Python runner inherits them from the web app:
+
+```sh
+# bash / zsh
+export ARGUS_DYAMOND_URL="https://new-host.example.org/nasa/nsdf/climate3/dyamond"
+```
+
+```powershell
+# PowerShell
+$env:ARGUS_DYAMOND_URL = "https://new-host.example.org/nasa/nsdf/climate3/dyamond"
+```
+
+Check the [contest data page](https://sciviscontest2026.github.io/data/) for
+the current endpoints.
+
 ## Citation
 
 See [`CITATION.cff`](CITATION.cff). If you use ARGUS, please cite the contest
