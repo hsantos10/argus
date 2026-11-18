@@ -1,7 +1,7 @@
 /**
  * GLSL shaders for the ray-marched volume viewer.
  * Inlined as strings because Next.js/Turbopack doesn't support ?raw imports.
- * Adapted from shaders by TODO-ATTRIBUTION.
+ * Adapted from the shaders in the VolumeViewer prototype by Tiansu.
  */
 
 export const VOLUME_VERT = /* glsl */ `

@@ -2,7 +2,7 @@
 
 /**
  * GPU-accelerated ocean globe viewer for LLC4320 data.
- * Adapted from GlobeViewer.tsx by TODO-ATTRIBUTION.
+ * Adapted from the GlobeViewer.tsx prototype by Tiansu.
  * Fetches raw uint8 depth blocks from the FastAPI backend (port 8000) and
  * ray-marches through them on the GPU — no Python rendering round-trip.
  */
