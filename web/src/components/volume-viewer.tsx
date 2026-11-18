@@ -2,7 +2,7 @@
 
 /**
  * GPU ray-marching volume viewer for LLC4320 3D slab exploration.
- * Adapted from VolumeViewer.tsx (SlabScene) by TODO-ATTRIBUTION.
+ * Adapted from the VolumeViewer.tsx (SlabScene) prototype by Tiansu.
  * Simplified: VR in-scene histogram panels replaced with HTML overlay.
  * Fetches from the FastAPI backend on port 8000.
  */
